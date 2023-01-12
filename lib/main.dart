@@ -55,53 +55,65 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffeab676),
+      backgroundColor: const Color(0xffeab676),
       body: PageView.builder(
         reverse: true,
-        itemCount: 604,
         itemBuilder: (BuildContext context, int index) {
           if (_items.isNotEmpty) {
             String byPage = '';
             String surahName = '';
-            int jozzName = 0;
+            int jozzNum = 0;
+            bool isBasmalahShown = false;
 
-            for (Map ayah in _items) {
-              if (ayah['page'] == index + 1) {
-                byPage = byPage + ' ${ayah['aya_text']}';
-                print(_items[index]['aya_text']);
+            for (Map ayahData in _items) {
+              if (ayahData['page'] == index + 1) {
+                byPage = byPage + ' ${ayahData['aya_text']}';
               }
             }
 
-            for (Map surhName in _items) {
-              if (surhName['page'] == index + 1) {
-                surahName = surhName['sura_name_ar'];
-                print(_items[index]['sura_name_ar']);
+            for (Map ayahData in _items) {
+              if (ayahData['page'] == index + 1) {
+                surahName = ayahData['sura_name_ar'];
               }
             }
 
-            for (Map jozzNum in _items) {
-              if (jozzNum['page'] == index + 1) {
-                jozzName = jozzNum['jozz'];
-                print(_items[index]['jozz']);
+            for (Map ayahData in _items) {
+              if (ayahData['page'] == index + 1) {
+                jozzNum = ayahData['jozz'];
+              }
+            }
+
+            for (Map ayahData in _items) {
+              if (ayahData['page'] == index + 1) {
+                if (ayahData['aya_no'] == 1 &&
+                    ayahData['sura_name_ar'] != 'الفَاتِحة' &&
+                    ayahData['sura_name_ar'] != 'التوبَة') {
+                  isBasmalahShown = true;
+                  break;
+                }
               }
             }
 
             return SafeArea(
               child: Container(
                 decoration: index % 2 == 0
-                    ? BoxDecoration(
+                    ? const BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
-                            Colors.black12,
+                            Colors.black26,
+                            Colors.transparent,
+                            Colors.transparent,
                             Colors.transparent,
                             Colors.transparent
                           ],
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight))
-                    : BoxDecoration(
+                    : const BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
-                            Colors.black12,
+                            Colors.black26,
+                            Colors.transparent,
+                            Colors.transparent,
                             Colors.transparent,
                             Colors.transparent
                           ],
@@ -120,15 +132,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'الجزء $jozzName',
-                                style: TextStyle(
+                                'الجزء $jozzNum',
+                                style: const TextStyle(
                                     fontFamily: 'Kitab', fontSize: 20),
                                 textAlign: TextAlign.center,
                                 textDirection: TextDirection.rtl,
                               ),
                               Text(
                                 surahName,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'Kitab', fontSize: 20),
                                 textAlign: TextAlign.center,
                               ),
@@ -138,18 +150,37 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          byPage,
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(fontFamily: 'Hafs', fontSize: 22),
-                          textAlign: TextAlign.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            isBasmalahShown
+                                ? const Text(
+                                    "‏ ‏‏ ‏‏‏‏ ‏‏‏‏‏‏ ‏",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                        fontFamily: 'Hafs', fontSize: 22),
+                                    textAlign: TextAlign.center,
+                                  )
+                                : Container(),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              byPage,
+                              textDirection: TextDirection.rtl,
+                              style: const TextStyle(
+                                  fontFamily: 'Hafs', fontSize: 22),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
                       Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(
                             '${index + 1}',
-                            style: TextStyle(fontFamily: 'Kitab', fontSize: 18),
+                            style: const TextStyle(
+                                fontFamily: 'Kitab', fontSize: 18),
                           ))
                     ],
                   ),
@@ -157,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
