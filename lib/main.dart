@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:quran/search-delegate.dart';
 import 'package:quran/services/read_from_json.dart';
 import 'package:quran/services/tafseer_service.dart';
@@ -66,8 +65,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     dynamic args = ModalRoute.of(context)!.settings.arguments;
 
-    Set surahsSet = <dynamic>{};
-    List surahs = [];
+    Set surahsSet = <dynamic>{}; // اسماء السور غير مكررة
+    List surahs = []; // ليست من اسماء السور
+
     print(selectNewAyah);
     if (args != null && selectNewAyah == false) {
       int navigateToPage = 0;
@@ -117,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                             int initialPage = 0;
 
-                            initialPage = _items.firstWhere((element) =>
-                                element['sura_name_ar'] ==
+                            initialPage = _items.firstWhere((ayaData) =>
+                                ayaData['sura_name_ar'] ==
                                 surahs[index])['page'];
 
                             pageViewController.jumpToPage(initialPage - 1);
@@ -165,6 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ayahData['sura_name_ar'] != 'التوبَة') {
                     isBasmalahShown = true;
                   }
+
                   ayahsByPage.addAll([
                     if (isBasmalahShown) ...[
                       const TextSpan(
